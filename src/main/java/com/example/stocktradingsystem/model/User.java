@@ -2,13 +2,14 @@ package com.example.stocktradingsystem.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // persistent java class
 @Table(name = "users")
 public class User {
     @Id // primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // PK generation strategy: auto-increment
-    private Long id;
+    private String username;
 
     @NotNull
     private String firstName;
@@ -16,18 +17,17 @@ public class User {
     @NotNull
     private String lastName;
 
+
     @NotNull
-    private String username;
+    private String password;
 
     @NotNull
     private String email;
 
-    public Long getId() {
-        return id;
-    }
+    private String role;
 
-    public void setId(Long id) {
-        this.id = id;
+    public User () {
+        this.role = "ROLE_USER";
     }
 
     public String getFirstName() {
@@ -54,6 +54,14 @@ public class User {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -62,13 +70,28 @@ public class User {
         this.email = email;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean hasRole(String roleName) {
+        if (this.getRole().equals(roleName)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
