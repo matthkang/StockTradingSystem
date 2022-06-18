@@ -29,12 +29,7 @@ public class User {
 
     private String role;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_stocks",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "ticker")
-    )
+    @OneToMany
     private Set<Stock> stocks = new HashSet<>();
 
     public User () {

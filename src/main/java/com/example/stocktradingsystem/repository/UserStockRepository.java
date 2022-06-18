@@ -1,3 +1,4 @@
+/*
 package com.example.stocktradingsystem.repository;
 
 import com.example.stocktradingsystem.model.UserStock;
@@ -8,3 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface UserStockRepository extends JpaRepository<UserStock, Long> {
 
 }
+*/

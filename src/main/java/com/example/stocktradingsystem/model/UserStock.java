@@ -1,11 +1,11 @@
+/*
 package com.example.stocktradingsystem.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity // persistent java class
 @Table(name = "user_stocks")
-public class UserStock implements Serializable {
+public class UserStock {
     @Id
     @ManyToOne
     private User user;
@@ -47,3 +47,4 @@ public class UserStock implements Serializable {
     }
 
 }
+*/

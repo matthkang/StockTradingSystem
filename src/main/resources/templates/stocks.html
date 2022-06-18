@@ -40,7 +40,7 @@
                 <td th:text="${stock.init_price}">Initial Price</td>
                 <td>
                     <form action="#" th:action="@{/buy}" method="post">
-                        <input type="hidden" name="stock" th:value="${stock}"/>
+                        <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
                         <input type="submit" value="Buy"/>
                     </form>
                 </td>

@@ -3,29 +3,22 @@ package com.example.stocktradingsystem.controller;
 import com.example.stocktradingsystem.model.Schedule;
 import com.example.stocktradingsystem.model.Stock;
 import com.example.stocktradingsystem.model.User;
-import com.example.stocktradingsystem.model.UserStock;
 import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
 import com.example.stocktradingsystem.repository.UserRepository;
-import com.example.stocktradingsystem.repository.UserStockRepository;
-import com.example.stocktradingsystem.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import java.util.Set;
 
 @Controller
 public class AppController {
@@ -35,8 +28,6 @@ public class AppController {
     private StockRepository stockRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
-    @Autowired
-    private UserStockRepository userStockRepository;
 
     @GetMapping("")
     public String viewHomePage(){
@@ -89,13 +80,18 @@ public class AppController {
     }
 
     @PostMapping("/buy")
-    public String buyStock(@RequestParam Stock stock, Principal principal) {
+    public String buyStock(@RequestParam Stock thisStock, Principal principal, Model model) {
         String email = principal.getName();
         User user = userRepository.findByEmail(email);
-        String username = user.getUsername();
 
-        userStockRepository.save(new UserStock(user, stock));
+        Set<Stock> stocks = user.getStocks();
+        stocks.add(thisStock);
+        user.setStocks(stocks);
 
+        userRepository.save(user);
+
+        List<Stock> listStocks = stockRepository.findAll();
+        model.addAttribute("listStocks", listStocks);
         return "stocks";
     }
 }

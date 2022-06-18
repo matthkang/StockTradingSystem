@@ -2,8 +2,8 @@ package com.example.stocktradingsystem.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity // persistent java class
 @Table(name = "stocks")
@@ -11,14 +11,14 @@ public class Stock {
     @Id // primary key
     private String ticker;
 
-    @NotNull
     private String co_name;
 
-    @NotNull
     private Double volume;
 
-    @NotNull
     private Double init_price;
+
+    @ManyToOne
+    private User user;
 
     public Stock() {}
 
@@ -61,6 +61,14 @@ public class Stock {
         this.init_price = init_price;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Stock{" +
@@ -68,6 +76,7 @@ public class Stock {
                 ", co_name='" + co_name + '\'' +
                 ", volume=" + volume +
                 ", init_price=" + init_price +
+                ", user=" + user +
                 '}';
     }
 }
