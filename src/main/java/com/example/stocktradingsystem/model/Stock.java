@@ -20,9 +20,7 @@ public class Stock {
     @NotNull
     private Double init_price;
 
-    public Stock() {
-
-    }
+    public Stock() {}
 
     public Stock(String ticker, String co_name, Double volume, Double init_price) {
         this.ticker = ticker;

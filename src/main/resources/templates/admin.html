@@ -9,7 +9,7 @@
 </head>
 <body>
 <div align="center">
-    <h1>User Registration</h1>
+    <h1>Create New Stock</h1>
     <form action="#" th:action="@{/admin}" method="post" th:object="${stock}">
         <label>Company name:</label>
         <input type="text" name = "co_name" field="*{co_name}" /><br/>
@@ -23,7 +23,28 @@
         <label>Initial price:</label>
         <input type="text" name = "init_price" field="*{init_price}" /><br/>
 
-        <button type="submit">Register</button>
+        <button type="submit">Create</button>
+    </form>
+
+    <h1>Change Market Hours/Schedule</h1>
+    <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
+        <label>Monday Hours:</label></br>
+        <label>Open: </label><input type="number" name="mon_open" step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="mon_close" step="1" min = "1" max = "24"><br/>
+        <label>Tuesday Hours:</label></br>
+        <label>Open: </label><input type="number" name="tues_open" step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="tues_close" step="1" min = "1" max = "24"><br/>
+        <label>Wednesday Hours:</label></br>
+        <label>Open: </label><input type="number" name="wed_open" step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="wed_close" step="1" min = "1" max = "24"><br/>
+        <label>Thursday Hours:</label></br>
+        <label>Open: </label><input type="number" name="thurs_open" step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="thurs_close" step="1" min = "1" max = "24"><br/>
+        <label>Friday Hours:</label></br>
+        <label>Open: </label><input type="number" name="fri_open" step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="fri_close" step="1" min = "1" max = "24"><br/>
+
+        <button type="submit">Change</button>
     </form>
 </div>
 

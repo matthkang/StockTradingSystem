@@ -3,7 +3,9 @@ package com.example.stocktradingsystem.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity // persistent java class
 @Table(name = "users")
@@ -22,9 +24,18 @@ public class User {
     private String password;
 
     @NotNull
+    @Column(unique=true)
     private String email;
 
     private String role;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_stocks",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "ticker")
+    )
+    private Set<Stock> stocks = new HashSet<>();
 
     public User () {
         this.role = "ROLE_USER";
@@ -85,14 +96,24 @@ public class User {
         return false;
     }
 
+    public Set<Stock> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(Set<Stock> stocks) {
+        this.stocks = stocks;
+    }
+
     @Override
     public String toString() {
         return "User{" +
+                "username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", stocks=" + stocks +
                 '}';
     }
 }

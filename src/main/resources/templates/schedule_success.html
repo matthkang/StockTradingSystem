@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Stock Added Success</title>
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container text-center">
+  <h3>You have changed the schedule successfully!</h3>
+
+  <h4>Monday</h4>
+  <span>Open:</span><span th:text="${schedule.mon_open}"></span>
+  <span>Closed:</span><span th:text="${schedule.mon_close}"></span><br/>
+  <h4>Tuesday</h4>
+  <span>Open:</span><span th:text="${schedule.tues_open}"></span>
+  <span>Closed:</span><span th:text="${schedule.tues_close}"></span><br/>
+  <h4>Wednesday</h4>
+  <span>Open:</span><span th:text="${schedule.wed_open}"></span>
+  <span>Closed:</span><span th:text="${schedule.wed_close}"></span><br/>
+  <h4>Thursday</h4>
+  <span>Open:</span><span th:text="${schedule.thurs_open}"></span>
+  <span>Closed:</span><span th:text="${schedule.thurs_close}"></span><br/>
+  <h4>Friday</h4>
+  <span>Open:</span><span th:text="${schedule.fri_open}"></span>
+  <span>Closed:</span><span th:text="${schedule.fri_close}"></span><br/>
+  <br/>
+
+  <form action="/admin">
+    <input type="submit" value="Change schedule again" />
+  </form>
+</div>
+
+</body>
+</html>

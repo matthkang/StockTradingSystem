@@ -29,6 +29,7 @@
                 <th>Stock Ticker</th>
                 <th>Volume</th>
                 <th>Initial Price</th>
+                <th>Buy</th>
             </tr>
             </thead>
             <tbody>
@@ -37,6 +38,12 @@
                 <td th:text="${stock.ticker}">Stock Ticker</td>
                 <td th:text="${stock.volume}">Volume</td>
                 <td th:text="${stock.init_price}">Initial Price</td>
+                <td>
+                    <form action="#" th:action="@{/buy}" method="post">
+                        <input type="hidden" name="stock" th:value="${stock}"/>
+                        <input type="submit" value="Buy"/>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
