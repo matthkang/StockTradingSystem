@@ -1,4 +1,3 @@
-/*
 package com.example.stocktradingsystem.model;
 
 import javax.persistence.*;
@@ -7,10 +6,12 @@ import javax.persistence.*;
 @Table(name = "user_stocks")
 public class UserStock {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     private User user;
 
-    @Id
     @ManyToOne
     private Stock stock;
 
@@ -20,6 +21,14 @@ public class UserStock {
     public UserStock(User user, Stock stock) {
         this.user = user;
         this.stock = stock;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public User getUser() {
@@ -40,11 +49,10 @@ public class UserStock {
 
     @Override
     public String toString() {
-        return "UserStocks{" +
+        return "UserStock{" +
+                "id=" + id +
                 ", user=" + user +
                 ", stock=" + stock +
                 '}';
     }
-
 }
-*/

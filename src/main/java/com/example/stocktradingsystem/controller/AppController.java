@@ -3,9 +3,11 @@ package com.example.stocktradingsystem.controller;
 import com.example.stocktradingsystem.model.Schedule;
 import com.example.stocktradingsystem.model.Stock;
 import com.example.stocktradingsystem.model.User;
+import com.example.stocktradingsystem.model.UserStock;
 import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
 import com.example.stocktradingsystem.repository.UserRepository;
+import com.example.stocktradingsystem.repository.UserStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,8 @@ public class AppController {
     private StockRepository stockRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private UserStockRepository userStockRepository;
 
     @GetMapping("")
     public String viewHomePage(){
@@ -88,7 +92,7 @@ public class AppController {
         stocks.add(thisStock);
         user.setStocks(stocks);
 
-        userRepository.save(user);
+        userStockRepository.save(new UserStock(user, thisStock));
 
         List<Stock> listStocks = stockRepository.findAll();
         model.addAttribute("listStocks", listStocks);

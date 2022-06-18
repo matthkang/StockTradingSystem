@@ -32,6 +32,8 @@ public class User {
     @OneToMany
     private Set<Stock> stocks = new HashSet<>();
 
+    private int numOfStocks;
+
     public User () {
         this.role = "ROLE_USER";
     }
@@ -99,6 +101,14 @@ public class User {
         this.stocks = stocks;
     }
 
+    public int getNumOfStocks() {
+        return numOfStocks;
+    }
+
+    public void setNumOfStocks(int numOfStocks) {
+        this.numOfStocks = numOfStocks;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -109,6 +119,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 ", stocks=" + stocks +
+                ", numOfStocks=" + numOfStocks +
                 '}';
     }
 }
