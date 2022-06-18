@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to CodeJava Home (Admin)</title>
+    <title>Welcome to Admin Home (Admin)</title>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container text-center">
-    <h1>Welcome to CodeJava.net (Admin)</h1>
-    <h3><a th:href="@{/users}">List of Users</a></h3>
-    <h3><a th:href="@{/register}">Register</a></h3>
-    <h3><a th:href="@{/login}">Login</a></h3>
+<div align="center">
+    <h1>User Registration</h1>
+    <form action="#" th:action="@{/admin}" method="post" th:object="${stock}">
+        <label>Company name:</label>
+        <input type="text" name = "co_name" field="*{co_name}" /><br/>
+
+        <label>Ticker:</label>
+        <input type="text" name = "ticker" field="*{ticker}" /><br/>
+
+        <label>Volume:</label>
+        <input type="text" name = "volume" field="*{volume}" /><br/>
+
+        <label>Initial price:</label>
+        <input type="text" name = "init_price" field="*{init_price}" /><br/>
+
+        <button type="submit">Register</button>
+    </form>
 </div>
 
 </body>
 </html>
+

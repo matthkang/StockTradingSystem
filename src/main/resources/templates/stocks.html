@@ -32,12 +32,12 @@
             </tr>
             </thead>
             <tbody>
-            <!--<tr th:each="user: ${listUsers}">
-                <td th:text="${user.id}">User ID</td>
-                <td th:text="${user.email}">E-mail</td>
-                <td th:text="${user.firstName}">First Name</td>
-                <td th:text="${user.lastName}">Last Name</td>
-            </tr>-->
+            <tr th:each="stock: ${listStocks}">
+                <td th:text="${stock.co_name}">Company Name</td>
+                <td th:text="${stock.ticker}">Stock Ticker</td>
+                <td th:text="${stock.volume}">Volume</td>
+                <td th:text="${stock.init_price}">Initial Price</td>
+            </tr>
             </tbody>
         </table>
     </div>

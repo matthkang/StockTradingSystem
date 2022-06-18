@@ -2,13 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration Success</title>
+    <title>Stock Added Success</title>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
 <div class="container text-center">
-    <h3>You have signed up successfully!</h3>
-    <h4><a th:href="@{/login}">Click here to Login</a></h4>
+    <h3>You have added a stock successfully!</h3>
+
+    <span>Ticker:</span><span th:text="${stock.ticker}"></span><br/>
+    <span>Company name:</span><span th:text="${stock.co_name}"></span><br/>
+    <span>Volume:</span><span th:text="${stock.volume}"></span><br/>
+    <span>Initial price:</span><span th:text="${stock.init_price}"></span><br/>
+
+    <form action="/admin">
+        <input type="submit" value="Add another stock" />
+    </form>
 </div>
 
 </body>
