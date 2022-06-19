@@ -77,11 +77,19 @@ public class AppController {
     }
 
     @GetMapping("/customer")
-    public String listUsers(Model model, Principal principal) {
+    public String customerPage(Model model, Principal principal) {
         List<Stock> listStocks = stockRepository.findAll();
         model.addAttribute("listStocks", listStocks);
 
-        //List<UserStock> userStocks = userStockRepository
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
+        //String username = user.getUsername();
+
+        List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
+        model.addAttribute("userStocks", userStocks);
+
+        System.out.println("userstock: " + userStocks);
+
         return "customer";
     }
 

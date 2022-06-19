@@ -57,25 +57,16 @@
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>Company Name</th>
-                <th>Stock Ticker</th>
-                <th>Volume</th>
-                <th>Initial Price</th>
-                <th>Buy</th>
+                <th>Ticker</th>
+                <th>Price</th>
+                <th>Type</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="stock: ${listStocks}">
-                <td th:text="${stock.co_name}">Company Name</td>
-                <td th:text="${stock.ticker}">Stock Ticker</td>
-                <td th:text="${stock.volume}">Volume</td>
-                <td th:text="${stock.init_price}">Initial Price</td>
-                <td>
-                    <form action="#" th:action="@{/buy}" method="post">
-                        <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
-                        <input type="submit" value="Buy"/>
-                    </form>
-                </td>
+            <tr th:each="stock: ${userStocks}">
+                <td th:text="${stock.stock.ticker}">Ticker</td>
+                <td th:text="${stock.boughtPrice}">Price</td>
+                <td th:text="${stock.buyOrSell}">Type</td>
             </tr>
             </tbody>
         </table>

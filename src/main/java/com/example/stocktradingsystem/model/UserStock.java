@@ -10,9 +10,11 @@ public class UserStock {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name="username")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name="stock")
     private Stock stock;
 
     private Double boughtPrice;
