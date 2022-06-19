@@ -94,12 +94,14 @@ public class AppController {
     }
 
     @PostMapping("/buy")
-    public String buyStock(@RequestParam Stock thisStock, Principal principal, Model model) {
+    public String buyStock(@RequestParam Stock thisStock, @RequestParam String amount, Principal principal, Model model) {
         String email = principal.getName();
         User user = userRepository.findByEmail(email);
 
         Double price = thisStock.getInit_price();
-        userStockRepository.save(new UserStock(user, thisStock, price,"buy"));
+        for (int i = 0; i < Integer.parseInt(amount); i++){
+            userStockRepository.save(new UserStock(user, thisStock, price,"buy"));
+        }
 
         return "buy_success";
     }
