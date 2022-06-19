@@ -29,10 +29,8 @@ public class User {
 
     private String role;
 
-    @OneToMany
-    private Set<Stock> stocks = new HashSet<>();
-
-    private int numOfStocks;
+    @OneToMany(mappedBy = "user")
+    private List<Stock> stocks = new ArrayList<>();
 
     public User () {
         this.role = "ROLE_USER";
@@ -93,20 +91,12 @@ public class User {
         return false;
     }
 
-    public Set<Stock> getStocks() {
+    public List<Stock> getStocks() {
         return stocks;
     }
 
-    public void setStocks(Set<Stock> stocks) {
+    public void setStocks(List<Stock> stocks) {
         this.stocks = stocks;
-    }
-
-    public int getNumOfStocks() {
-        return numOfStocks;
-    }
-
-    public void setNumOfStocks(int numOfStocks) {
-        this.numOfStocks = numOfStocks;
     }
 
     @Override
@@ -119,7 +109,6 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 ", stocks=" + stocks +
-                ", numOfStocks=" + numOfStocks +
                 '}';
     }
 }

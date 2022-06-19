@@ -76,11 +76,13 @@ public class AppController {
         return "register_success";
     }
 
-    @GetMapping("/stocks")
-    public String listUsers(Model model) {
+    @GetMapping("/customer")
+    public String listUsers(Model model, Principal principal) {
         List<Stock> listStocks = stockRepository.findAll();
         model.addAttribute("listStocks", listStocks);
-        return "stocks";
+
+        //List<UserStock> userStocks = userStockRepository
+        return "customer";
     }
 
     @PostMapping("/buy")
@@ -88,14 +90,9 @@ public class AppController {
         String email = principal.getName();
         User user = userRepository.findByEmail(email);
 
-        Set<Stock> stocks = user.getStocks();
-        stocks.add(thisStock);
-        user.setStocks(stocks);
+        Double price = thisStock.getInit_price();
+        userStockRepository.save(new UserStock(user, thisStock, price,"buy"));
 
-        userStockRepository.save(new UserStock(user, thisStock));
-
-        List<Stock> listStocks = stockRepository.findAll();
-        model.addAttribute("listStocks", listStocks);
-        return "stocks";
+        return "buy_success";
     }
 }

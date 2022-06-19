@@ -18,9 +18,41 @@
         </form>
     </div>
     <div>
-        <h1>List of Stocks</h1>
+        <h1>Market</h1>
     </div>
 
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Stock Ticker</th>
+                <th>Initial Price</th>
+                <th>Volume</th>
+                <th>Market Capitalization</th>
+                <th>Buy</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="stock: ${listStocks}">
+                <td th:text="${stock.ticker}">Stock Ticker</td>
+                <td th:text="${stock.init_price}">Initial Price</td>
+                <td th:text="${stock.volume}">Volume</td>
+                <td th:text="${stock.volume} * ${stock.init_price}">Market Capitalization</td>
+
+                <td>
+                    <form action="#" th:action="@{/buy}" method="post">
+                        <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
+                        <input type="submit" value="Buy"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h1>Portfolio</h1>
+    </div>
     <div>
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">

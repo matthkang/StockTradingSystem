@@ -15,12 +15,18 @@ public class UserStock {
     @ManyToOne
     private Stock stock;
 
+    private Double boughtPrice;
+
+    private String buyOrSell;
+
     public UserStock() {
     }
 
-    public UserStock(User user, Stock stock) {
+    public UserStock(User user, Stock stock, Double boughtPrice, String buyOrSell) {
         this.user = user;
         this.stock = stock;
+        this.boughtPrice = boughtPrice;
+        this.buyOrSell = buyOrSell;
     }
 
     public Long getId() {
@@ -47,12 +53,30 @@ public class UserStock {
         this.stock = stock;
     }
 
+    public Double getBoughtPrice() {
+        return boughtPrice;
+    }
+
+    public void setBoughtPrice(Double boughtPrice) {
+        this.boughtPrice = boughtPrice;
+    }
+
+    public String getBuyOrSell() {
+        return buyOrSell;
+    }
+
+    public void setBuyOrSell(String buyOrSell) {
+        this.buyOrSell = buyOrSell;
+    }
+
     @Override
     public String toString() {
         return "UserStock{" +
                 "id=" + id +
                 ", user=" + user +
                 ", stock=" + stock +
+                ", boughtPrice=" + boughtPrice +
+                ", buyOrSell='" + buyOrSell + '\'' +
                 '}';
     }
 }
