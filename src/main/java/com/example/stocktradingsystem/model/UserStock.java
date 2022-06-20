@@ -1,6 +1,7 @@
 package com.example.stocktradingsystem.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity // persistent java class
 @Table(name = "user_stocks")
@@ -17,18 +18,72 @@ public class UserStock {
     @JoinColumn(name="stock")
     private Stock stock;
 
-    private Double boughtPrice;
+    private Double initPrice;
+
+    private Double desiredPrice;
 
     private String buyOrSell;
+
+    private String marketOrLimit;
+
+    private Date boughtDate;
+    private Date expireDate;
+
+    private Double amount;
 
     public UserStock() {
     }
 
-    public UserStock(User user, Stock stock, Double boughtPrice, String buyOrSell) {
+    public UserStock(User user, Stock stock, Double initPrice, Double desiredPrice, String buyOrSell, String marketOrLimit, Date boughtDate, Date expireDate, Double amount) {
         this.user = user;
         this.stock = stock;
-        this.boughtPrice = boughtPrice;
+        this.initPrice = initPrice;
+        this.desiredPrice = desiredPrice;
         this.buyOrSell = buyOrSell;
+        this.marketOrLimit = marketOrLimit;
+        this.boughtDate = boughtDate;
+        this.expireDate = expireDate;
+        this.amount = amount;
+    }
+
+    public Double getDesiredPrice() {
+        return desiredPrice;
+    }
+
+    public void setDesiredPrice(Double desiredPrice) {
+        this.desiredPrice = desiredPrice;
+    }
+
+    public String getMarketOrLimit() {
+        return marketOrLimit;
+    }
+
+    public void setMarketOrLimit(String marketOrLimit) {
+        this.marketOrLimit = marketOrLimit;
+    }
+
+    public Date getBoughtDate() {
+        return boughtDate;
+    }
+
+    public void setBoughtDate(Date boughtDate) {
+        this.boughtDate = boughtDate;
+    }
+
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Long getId() {
@@ -55,12 +110,12 @@ public class UserStock {
         this.stock = stock;
     }
 
-    public Double getBoughtPrice() {
-        return boughtPrice;
+    public Double getInitPrice() {
+        return initPrice;
     }
 
-    public void setBoughtPrice(Double boughtPrice) {
-        this.boughtPrice = boughtPrice;
+    public void setInitPrice(Double boughtPrice) {
+        this.initPrice = boughtPrice;
     }
 
     public String getBuyOrSell() {
@@ -77,8 +132,13 @@ public class UserStock {
                 "id=" + id +
                 ", user=" + user +
                 ", stock=" + stock +
-                ", boughtPrice=" + boughtPrice +
+                ", initPrice=" + initPrice +
+                ", desiredPrice=" + desiredPrice +
                 ", buyOrSell='" + buyOrSell + '\'' +
+                ", marketOrLimit='" + marketOrLimit + '\'' +
+                ", boughtDate=" + boughtDate +
+                ", expireDate=" + expireDate +
+                ", amount=" + amount +
                 '}';
     }
 }

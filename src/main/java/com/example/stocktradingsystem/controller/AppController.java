@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.HashSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class AppController {
@@ -78,31 +79,89 @@ public class AppController {
 
     @GetMapping("/customer")
     public String customerPage(Model model, Principal principal) {
-        List<Stock> listStocks = stockRepository.findAll();
-        model.addAttribute("listStocks", listStocks);
-
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
-        //String username = user.getUsername();
-
-        List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
-        model.addAttribute("userStocks", userStocks);
-
-        System.out.println("userstock: " + userStocks);
+        User user = returnCurrUser(principal);
+        listMarketUserStocks(principal, model);
 
         return "customer";
     }
 
-    @PostMapping("/buy")
-    public String buyStock(@RequestParam Stock thisStock, @RequestParam String amount, Principal principal, Model model) {
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
+    @PostMapping("/marketBuy")
+    public String marketBuyStock(@RequestParam Stock thisStock, @RequestParam String marketBuyAmount, Principal principal, Model model) {
+        User user = returnCurrUser(principal);
 
         Double price = thisStock.getInit_price();
-        for (int i = 0; i < Integer.parseInt(amount); i++){
-            userStockRepository.save(new UserStock(user, thisStock, price,"buy"));
+        if (!marketBuyAmount.isEmpty()){
+            Double amount = Double.parseDouble(marketBuyAmount);
+            userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount));
         }
 
-        return "buy_success";
+        listMarketUserStocks(principal, model);
+        return "redirect:" + "customer";
+    }
+
+    @PostMapping("/marketSell")
+    public String marketSellStock(@RequestParam Stock thisStock, @RequestParam String marketSellAmount, Principal principal, Model model) {
+        User user = returnCurrUser(principal);
+
+        Double price = thisStock.getInit_price();
+        if (!marketSellAmount.isEmpty()){
+            Double amount = Double.parseDouble(marketSellAmount);
+            userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount));
+        }
+
+        listMarketUserStocks(principal, model);
+        return "redirect:" + "customer";
+    }
+
+    @PostMapping("/limitBuy")
+    public String limitBuyStock(@RequestParam Stock thisStock, @RequestParam String limitBuyPrice,
+                                @RequestParam String limitBuyAmount, @RequestParam String limitBuyDate,
+                                Principal principal, Model model) throws ParseException {
+        User user = returnCurrUser(principal);
+
+        if (thisStock != null && !limitBuyPrice.isEmpty() && !limitBuyAmount.isEmpty() && !limitBuyDate.isEmpty()) {
+            Double initPrice = thisStock.getInit_price();
+            Double amount = Double.parseDouble(limitBuyAmount);
+            Double desiredPrice = Double.parseDouble(limitBuyPrice);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitBuyDate);
+            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "buy", "limit", new Date(), date, amount));
+        }
+
+        listMarketUserStocks(principal, model);
+        return "redirect:" + "customer";
+    }
+
+    @PostMapping("/limitSell")
+    public String limitSellStock(@RequestParam Stock thisStock, @RequestParam String limitSellPrice,
+                                @RequestParam String limitSellAmount, @RequestParam String limitSellDate,
+                                Principal principal, Model model) throws ParseException {
+        User user = returnCurrUser(principal);
+
+        if (thisStock != null && !limitSellPrice.isEmpty() && !limitSellAmount.isEmpty() && !limitSellDate.isEmpty()) {
+            Double initPrice = thisStock.getInit_price();
+            Double amount = Double.parseDouble(limitSellAmount);
+            Double desiredPrice = Double.parseDouble(limitSellPrice);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitSellDate);
+            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount));
+        }
+
+        listMarketUserStocks(principal, model);
+        return "redirect:" + "customer";
+    }
+
+    public User returnCurrUser(Principal principal){
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
+        return user;
+    }
+
+    public void listMarketUserStocks(Principal principal, Model model){
+        User user = returnCurrUser(principal);
+
+        List<Stock> listStocks = stockRepository.findAll();
+        model.addAttribute("listStocks", listStocks);
+
+        List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
+        model.addAttribute("userStocks", userStocks);
     }
 }
