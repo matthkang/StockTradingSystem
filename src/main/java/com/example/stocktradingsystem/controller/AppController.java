@@ -130,18 +130,19 @@ public class AppController {
     @PostMapping("/marketSell")
     public String marketSellStock(@RequestParam Stock thisStock, @RequestParam String marketSellAmount, Principal principal, Model model) {
         User user = returnCurrUser(principal);
-
         Double price = thisStock.getInit_price();
+        listMarketUserStocks(principal, model);
+
         if (!marketSellAmount.isEmpty()){
             Double amount = Double.parseDouble(marketSellAmount);
-            userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
+            Double currShares = userStockRepository.findNumBuys(thisStock.getTicker()) - userStockRepository.findNumSells(thisStock.getTicker());
+
+            if (amount <= currShares){
+                userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
+                return "redirect:customer";
+            }
         }
-
-        //Double currShares = userStockRepository.findNumBuys(thisStock.getTicker());
-        //System.out.println("curr shares: " + currShares);
-
-        listMarketUserStocks(principal, model);
-        return "redirect:customer";
+        return "error_selling";
     }
 
     @PostMapping("/limitBuy")
@@ -168,16 +169,20 @@ public class AppController {
                                 Principal principal, Model model) throws ParseException {
         User user = returnCurrUser(principal);
 
+        listMarketUserStocks(principal, model);
         if (thisStock != null && !limitSellPrice.isEmpty() && !limitSellAmount.isEmpty() && !limitSellDate.isEmpty()) {
             Double initPrice = thisStock.getInit_price();
             Double amount = Double.parseDouble(limitSellAmount);
             Double desiredPrice = Double.parseDouble(limitSellPrice);
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitSellDate);
-            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount, "false"));
-        }
+            Double currShares = userStockRepository.findNumBuys(thisStock.getTicker()) - userStockRepository.findNumSells(thisStock.getTicker());
 
-        listMarketUserStocks(principal, model);
-        return "redirect:customer";
+            if (amount <= currShares){
+                userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount, "false"));
+                return "redirect:customer";
+            }
+        }
+        return "error_selling";
     }
 
     @PostMapping("/cancelOrder")
