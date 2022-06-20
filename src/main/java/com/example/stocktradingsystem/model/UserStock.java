@@ -31,10 +31,12 @@ public class UserStock {
 
     private Double amount;
 
+    private String fulfilled;
+
     public UserStock() {
     }
 
-    public UserStock(User user, Stock stock, Double initPrice, Double desiredPrice, String buyOrSell, String marketOrLimit, Date boughtDate, Date expireDate, Double amount) {
+    public UserStock(User user, Stock stock, Double initPrice, Double desiredPrice, String buyOrSell, String marketOrLimit, Date boughtDate, Date expireDate, Double amount, String fulfilled) {
         this.user = user;
         this.stock = stock;
         this.initPrice = initPrice;
@@ -44,6 +46,7 @@ public class UserStock {
         this.boughtDate = boughtDate;
         this.expireDate = expireDate;
         this.amount = amount;
+        this.fulfilled = fulfilled;
     }
 
     public Double getDesiredPrice() {
@@ -126,6 +129,14 @@ public class UserStock {
         this.buyOrSell = buyOrSell;
     }
 
+    public String isFulfilled() {
+        return fulfilled;
+    }
+
+    public void setFulfilled(String fulfilled) {
+        this.fulfilled = fulfilled;
+    }
+
     @Override
     public String toString() {
         return "UserStock{" +
@@ -139,6 +150,7 @@ public class UserStock {
                 ", boughtDate=" + boughtDate +
                 ", expireDate=" + expireDate +
                 ", amount=" + amount +
+                ", fulfilled=" + fulfilled +
                 '}';
     }
 }

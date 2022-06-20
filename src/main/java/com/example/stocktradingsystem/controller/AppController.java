@@ -8,6 +8,7 @@ import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
 import com.example.stocktradingsystem.repository.UserRepository;
 import com.example.stocktradingsystem.repository.UserStockRepository;
+import com.example.stocktradingsystem.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,9 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
 
 @Controller
 public class AppController {
@@ -34,8 +37,41 @@ public class AppController {
     @Autowired
     private UserStockRepository userStockRepository;
 
+    @Autowired
+    AppService appService;
+
+    public User returnCurrUser(Principal principal){
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
+        return user;
+    }
+
+    public void listMarketUserStocks(Principal principal, Model model){
+        User user = returnCurrUser(principal);
+
+        List<Stock> listStocks = stockRepository.findAll();
+        model.addAttribute("listStocks", listStocks);
+
+        List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
+        model.addAttribute("userStocks", userStocks);
+
+        List<String> distinctStocks = userStockRepository.findDistinctStockTickers();
+        HashMap<String, Double> map = new HashMap<>();
+        for (String ticker: distinctStocks){
+            Double numBuys = userStockRepository.findNumBuys(ticker);
+            Double numSells = userStockRepository.findNumSells(ticker);
+            Double total = numBuys - numSells;
+            // only add to map if shares is greater than 0
+            if (total > 0){
+                map.put(ticker, total);
+            }
+        }
+        model.addAttribute("map", map);
+    }
+
     @GetMapping("")
     public String viewHomePage(){
+        appService.randomizePrice();
         return "index";
     }
 
@@ -79,9 +115,7 @@ public class AppController {
 
     @GetMapping("/customer")
     public String customerPage(Model model, Principal principal) {
-        User user = returnCurrUser(principal);
         listMarketUserStocks(principal, model);
-
         return "customer";
     }
 
@@ -92,11 +126,12 @@ public class AppController {
         Double price = thisStock.getInit_price();
         if (!marketBuyAmount.isEmpty()){
             Double amount = Double.parseDouble(marketBuyAmount);
-            userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount));
+            UserStock u2 = userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount, "true"));
+            System.out.println(u2);
         }
 
         listMarketUserStocks(principal, model);
-        return "redirect:" + "customer";
+        return "redirect:customer";
     }
 
     @PostMapping("/marketSell")
@@ -106,11 +141,11 @@ public class AppController {
         Double price = thisStock.getInit_price();
         if (!marketSellAmount.isEmpty()){
             Double amount = Double.parseDouble(marketSellAmount);
-            userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount));
+            userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
         }
 
         listMarketUserStocks(principal, model);
-        return "redirect:" + "customer";
+        return "redirect:customer";
     }
 
     @PostMapping("/limitBuy")
@@ -124,11 +159,11 @@ public class AppController {
             Double amount = Double.parseDouble(limitBuyAmount);
             Double desiredPrice = Double.parseDouble(limitBuyPrice);
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitBuyDate);
-            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "buy", "limit", new Date(), date, amount));
+            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "buy", "limit", new Date(), date, amount, "false"));
         }
 
         listMarketUserStocks(principal, model);
-        return "redirect:" + "customer";
+        return "redirect:customer";
     }
 
     @PostMapping("/limitSell")
@@ -142,26 +177,19 @@ public class AppController {
             Double amount = Double.parseDouble(limitSellAmount);
             Double desiredPrice = Double.parseDouble(limitSellPrice);
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitSellDate);
-            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount));
+            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount, "false"));
         }
 
         listMarketUserStocks(principal, model);
-        return "redirect:" + "customer";
+        return "redirect:customer";
     }
 
-    public User returnCurrUser(Principal principal){
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
-        return user;
-    }
+    @PostMapping("/cancelOrder")
+    public String cancelLimitOrder(@RequestParam UserStock thisStock, Principal principal, Model model){
+        Long id = thisStock.getId();
+        userStockRepository.deleteById(id);
 
-    public void listMarketUserStocks(Principal principal, Model model){
-        User user = returnCurrUser(principal);
-
-        List<Stock> listStocks = stockRepository.findAll();
-        model.addAttribute("listStocks", listStocks);
-
-        List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
-        model.addAttribute("userStocks", userStocks);
+        listMarketUserStocks(principal, model);
+        return "redirect:customer";
     }
 }
