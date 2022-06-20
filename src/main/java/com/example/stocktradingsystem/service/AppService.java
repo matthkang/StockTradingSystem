@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -33,13 +34,11 @@ public class AppService {
                 // if new price is greater than or equal to desired price
                 // and if curr date is before or equal to expired date
                 // and buy has not been fulfilled yet
-                /*if (newPrice >= limitStock.getDesiredPrice() &&
+                if (newPrice >= limitStock.getDesiredPrice() &&
                         new Date().compareTo(limitStock.getExpireDate()) <= 0 &&
-                limitStock.isFulfilled() == "false"){*/
-                if (limitStock.isFulfilled().equals("false")){
+                        limitStock.isFulfilled() == "false"){
                     limitStock.setFulfilled("true");
                     userStockRepository.save(limitStock);
-                    System.out.println("set to true");
                 }
             }
         }
