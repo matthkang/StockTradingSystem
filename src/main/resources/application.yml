@@ -1,0 +1,4 @@
+# Don't forget to change the profile to prod in production mode
+spring:
+  profiles:
+    active: dev

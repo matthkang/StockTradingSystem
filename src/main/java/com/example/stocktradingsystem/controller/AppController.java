@@ -8,7 +8,6 @@ import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
 import com.example.stocktradingsystem.repository.UserRepository;
 import com.example.stocktradingsystem.repository.UserStockRepository;
-import com.example.stocktradingsystem.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
 @Controller
 public class AppController {
     @Autowired
@@ -36,9 +34,6 @@ public class AppController {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserStockRepository userStockRepository;
-
-    @Autowired
-    AppService appService;
 
     public User returnCurrUser(Principal principal){
         String email = principal.getName();
@@ -71,7 +66,6 @@ public class AppController {
 
     @GetMapping("")
     public String viewHomePage(){
-        appService.randomizePrice();
         return "index";
     }
 
@@ -126,8 +120,7 @@ public class AppController {
         Double price = thisStock.getInit_price();
         if (!marketBuyAmount.isEmpty()){
             Double amount = Double.parseDouble(marketBuyAmount);
-            UserStock u2 = userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount, "true"));
-            System.out.println(u2);
+            userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount, "true"));
         }
 
         listMarketUserStocks(principal, model);
@@ -143,6 +136,9 @@ public class AppController {
             Double amount = Double.parseDouble(marketSellAmount);
             userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
         }
+
+        //Double currShares = userStockRepository.findNumBuys(thisStock.getTicker());
+        //System.out.println("curr shares: " + currShares);
 
         listMarketUserStocks(principal, model);
         return "redirect:customer";
