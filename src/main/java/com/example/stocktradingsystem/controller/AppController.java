@@ -145,12 +145,20 @@ public class AppController {
 
         if (!marketSellAmount.isEmpty()){
             Double amount = Double.parseDouble(marketSellAmount);
-            Double currShares = userStockRepository.findNumBuys(thisStock.getTicker()) - userStockRepository.findNumSells(thisStock.getTicker());
+            Double numBuys = userStockRepository.findNumBuys(thisStock.getTicker());
+            Double numSells = userStockRepository.findNumSells(thisStock.getTicker());
+            if (numBuys == null){
+                numBuys = 0.0;
+            }
+            if (numSells == null){
+                numSells = 0.0;
+            }
+            Double currShares = numBuys - numSells;
 
             if (amount <= currShares){
                 userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
                 Double volume = thisStock.getVolume();
-                volume++;
+                volume += amount;
                 thisStock.setVolume(volume);
                 stockRepository.save(thisStock);
 
@@ -190,7 +198,16 @@ public class AppController {
             Double amount = Double.parseDouble(limitSellAmount);
             Double desiredPrice = Double.parseDouble(limitSellPrice);
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitSellDate);
-            Double currShares = userStockRepository.findNumBuys(thisStock.getTicker()) - userStockRepository.findNumSells(thisStock.getTicker());
+
+            Double numBuys = userStockRepository.findNumBuys(thisStock.getTicker());
+            Double numSells = userStockRepository.findNumSells(thisStock.getTicker());
+            if (numBuys == null){
+                numBuys = 0.0;
+            }
+            if (numSells == null){
+                numSells = 0.0;
+            }
+            Double currShares = numBuys - numSells;
 
             if (amount <= currShares){
                 userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount, "false"));
