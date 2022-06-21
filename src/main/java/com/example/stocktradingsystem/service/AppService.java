@@ -60,8 +60,8 @@ public class AppService {
         List<Stock> stocks = stockRepository.findAll();
         for (Stock stock : stocks) {
             Random r = new Random();
-            // rand number from -0.15 to 0.15
-            double percentage = -0.15 + (0.15 - (-0.15)) * r.nextDouble();
+            // rand number from -0.05 to 0.05
+            double percentage = -0.05 + (0.05 - (-0.05)) * r.nextDouble();
             Double newPrice = stock.getInit_price() * (1 + percentage);
             DecimalFormat df = new DecimalFormat("#.##");
             newPrice = Double.valueOf(df.format(newPrice));
