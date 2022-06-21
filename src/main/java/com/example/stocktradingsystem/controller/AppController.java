@@ -44,17 +44,27 @@ public class AppController {
     public void listMarketUserStocks(Principal principal, Model model){
         User user = returnCurrUser(principal);
 
+        // market
         List<Stock> listStocks = stockRepository.findAll();
         model.addAttribute("listStocks", listStocks);
 
+        // transaction history
         List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
         model.addAttribute("userStocks", userStocks);
 
+        // portfolio
         List<String> distinctStocks = userStockRepository.findDistinctStockTickers();
+        // ticker, shares
         HashMap<String, Double> map = new HashMap<>();
         for (String ticker: distinctStocks){
             Double numBuys = userStockRepository.findNumBuys(ticker);
             Double numSells = userStockRepository.findNumSells(ticker);
+            if (numBuys == null){
+                numBuys = 0.0;
+            }
+            if (numSells == null){
+                numSells = 0.0;
+            }
             Double total = numBuys - numSells;
             // only add to map if shares is greater than 0
             if (total > 0){
@@ -139,6 +149,11 @@ public class AppController {
 
             if (amount <= currShares){
                 userStockRepository.save(new UserStock(user, thisStock, price, price, "sell", "market", new Date(), null, amount, "true"));
+                Double volume = thisStock.getVolume();
+                volume++;
+                thisStock.setVolume(volume);
+                stockRepository.save(thisStock);
+
                 return "redirect:customer";
             }
         }

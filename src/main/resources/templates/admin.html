@@ -18,7 +18,7 @@
         <input type="text" name = "ticker" field="*{ticker}" /><br/>
 
         <label>Volume:</label>
-        <input type="text" name = "volume" field="*{volume}" /><br/>
+        <input type="text" name = "volume" field="*{volume}" value=0.0><br/>
 
         <label>Initial price:</label>
         <input type="text" name = "init_price" field="*{init_price}" /><br/>
@@ -29,20 +29,25 @@
     <h1>Change Market Hours/Schedule</h1>
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Monday Hours:</label></br>
-        <label>Open: </label><input type="number" name="mon_open" step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="mon_close" step="1" min = "1" max = "24"><br/>
+        <label>Open: </label><input type="number" name="mon_open" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="mon_close" step="1" value=16 min = "1" max = "24">
+        <label>EST</label><br/>
         <label>Tuesday Hours:</label></br>
-        <label>Open: </label><input type="number" name="tues_open" step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="tues_close" step="1" min = "1" max = "24"><br/>
+        <label>Open: </label><input type="number" name="tues_open" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="tues_close" value=16 step="1" min = "1" max = "24">
+        <label>EST</label><br/>
         <label>Wednesday Hours:</label></br>
-        <label>Open: </label><input type="number" name="wed_open" step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="wed_close" step="1" min = "1" max = "24"><br/>
+        <label>Open: </label><input type="number" name="wed_open" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="wed_close" value=16 step="1" min = "1" max = "24">
+        <label>EST</label><br/>
         <label>Thursday Hours:</label></br>
-        <label>Open: </label><input type="number" name="thurs_open" step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="thurs_close" step="1" min = "1" max = "24"><br/>
+        <label>Open: </label><input type="number" name="thurs_open" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="thurs_close" value=16 step="1" min = "1" max = "24">
+        <label>EST</label><br/>
         <label>Friday Hours:</label></br>
-        <label>Open: </label><input type="number" name="fri_open" step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="fri_close" step="1" min = "1" max = "24"><br/>
+        <label>Open: </label><input type="number" name="fri_open" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="fri_close" value=16 step="1" min = "1" max = "24">
+        <label>EST</label><br/>
 
         <button type="submit">Change</button>
     </form>

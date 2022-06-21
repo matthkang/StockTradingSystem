@@ -45,7 +45,7 @@
                 <td>
                     <form action="#" th:action="@{/marketBuy}" method="post">
                         <label>Amount: </label>
-                        <input type="number" name="marketBuyAmount" style="width: 75px" step="1" min="1">
+                        <input type="number" name="marketBuyAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
                         <input type="submit" value="Buy"/>
                     </form>
@@ -53,7 +53,7 @@
                 <td>
                     <form action="#" th:action="@{/marketSell}" method="post">
                         <label>Amount: </label>
-                        <input type="number" name="marketSellAmount" style="width: 75px" step="1" min="1">
+                        <input type="number" name="marketSellAmount" style="width: 75px" step="1" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
                         <input type="submit" value="Sell"/>
                     </form>
@@ -63,7 +63,7 @@
                         <label>Desired Price: </label>
                         <input type="number" name="limitBuyPrice" style="width: 75px">
                         <label>Amount: </label>
-                        <input type="number" name="limitBuyAmount" style="width: 75px" step="1" min="1">
+                        <input type="number" name="limitBuyAmount" style="width: 75px" step="1" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
                         <label>Exp Date: </label>
                         <input type="date" name="limitBuyDate"></br>
@@ -75,7 +75,7 @@
                         <label>Desired Price: </label>
                         <input type="number" name="limitSellPrice" style="width: 75px">
                         <label>Amount: </label>
-                        <input type="number" name="limitSellAmount" style="width: 75px" step="1" min="1">
+                        <input type="number" name="limitSellAmount" style="width: 75px" step="1" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
                         <label>Exp Date: </label>
                         <input type="date" name="limitSellDate"></br>
