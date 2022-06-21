@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -40,21 +41,38 @@ public class AppController {
         return user;
     }
 
-    public void listMarketUserStocks(Principal principal, Model model){
-        User user = returnCurrUser(principal);
-
+    public boolean marketIsOpen(){
         String currDay = new SimpleDateFormat("EEE").format(new Date()).toLowerCase();
 
         Integer openTime = scheduleRepository.getOpenTimeByDay(currDay);
         Integer closedTime = scheduleRepository.getCloseTimeByDay(currDay);
 
-        Calendar calendar = GregorianCalendar.getInstance();
-        int currHour = calendar.get(Calendar.HOUR);
+        //int currHour = LocalDateTime.now().getHour();
+        int currHour = 20;
 
-        if (currHour >= openTime && currHour <= closedTime){
+        // if curr hour is at or past opening hour
+        // AND if curr hour is before closing hour
+        if (currHour >= openTime && currHour < closedTime){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void listMarketUserStocks(Principal principal, Model model){
+        User user = returnCurrUser(principal);
+
+        if (marketIsOpen()){
+            String marketOpen = "open";
+            model.addAttribute("marketStatus", marketOpen);
             // market
             List<Stock> listStocks = stockRepository.findAll();
             model.addAttribute("listStocks", listStocks);
+        }
+        else {
+            String marketClosed = "closed";
+            model.addAttribute("marketStatus", marketClosed);
         }
 
         // transaction history

@@ -30,8 +30,8 @@
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Monday Hours:</label></br>
         <input type="hidden" name ="day" value="mon"/>
-        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "0" max = "23">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "0" max = "23">
         <label>EST</label>
         <button type="submit">Set</button>
     </form>
@@ -39,8 +39,8 @@
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Tuesday Hours:</label></br>
         <input type="hidden" name ="day" value="tue"/>
-        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "0" max = "23">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "0" max = "23">
         <label>EST</label>
         <button type="submit">Set</button>
     </form>
@@ -48,8 +48,8 @@
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Wednesday Hours:</label></br>
         <input type="hidden" name ="day" value="wed"/>
-        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "0" max = "23">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "0" max = "23">
         <label>EST</label>
         <button type="submit">Set</button>
     </form>
@@ -57,8 +57,8 @@
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Thursday Hours:</label></br>
         <input type="hidden" name ="day" value="thu"/>
-        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "0" max = "23">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "0" max = "23">
         <label>EST</label>
         <button type="submit">Set</button>
     </form>
@@ -66,8 +66,8 @@
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Friday Hours:</label></br>
         <input type="hidden" name ="day" value="fri"/>
-        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "0" max = "23">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "0" max = "23">
         <label>EST</label>
         <button type="submit">Set</button>
     </form>

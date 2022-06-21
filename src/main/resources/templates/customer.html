@@ -27,7 +27,7 @@
             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
             var dateTime = date+' '+time;
 
-            document.getElementById("mytime").innerHTML = dateTime + ' <br> Day :- ' + daylist[day];
+            document.getElementById("mytime").innerHTML = dateTime + ' <br> Day: ' + daylist[day];
 
         </script>
 
@@ -35,6 +35,7 @@
     <div>
         <h1>Market</h1>
     </div>
+    <p th:text="'Market is ' + ${marketStatus} + '!'" />
 
     <div>
         <table class="table table-striped table-bordered">
