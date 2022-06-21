@@ -36,6 +36,15 @@ public class User {
         this.role = "ROLE_USER";
     }
 
+    public User(String username, String firstName, String lastName, String password, String email, String role) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
     public String getFirstName() {
         return firstName;
     }

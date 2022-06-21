@@ -12,6 +12,15 @@ public class Schedule {
 
     private Integer close_time;
 
+    public Schedule() {
+    }
+
+    public Schedule(String day, Integer open_time, Integer close_time) {
+        this.day = day;
+        this.open_time = open_time;
+        this.close_time = close_time;
+    }
+
     public String getDay() {
         return day;
     }
