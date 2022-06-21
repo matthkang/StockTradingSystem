@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -28,6 +29,8 @@ public class AppService {
             // rand number from -0.15 to 0.15
             double percentage = -0.15 + (0.15 - (-0.15)) * r.nextDouble();
             Double newPrice = stock.getInit_price() * (1 + percentage);
+            DecimalFormat df = new DecimalFormat("#.##");
+            newPrice = Double.valueOf(df.format(newPrice));
             System.out.println("stock: " + stock.getTicker());
             System.out.println("new price: " + newPrice);
             System.out.println();

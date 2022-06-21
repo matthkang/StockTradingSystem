@@ -55,9 +55,9 @@
             <tbody>
             <tr th:each="stock: ${listStocks}">
                 <td th:text="${stock.ticker}">Stock Ticker</td>
-                <td th:text="${stock.init_price}">Initial Price</td>
-                <td th:text="${stock.volume}">Volume</td>
-                <td th:text="${stock.volume} * ${stock.init_price}">Market Cap</td>
+                <td th:text="${#numbers.formatCurrency(stock.init_price)}">Initial Price</td>
+                <td th:text="${#numbers.formatDecimal(stock.volume, 0, 'COMMA', 2, 'POINT')}">Volume</td>
+                <td th:text="${#numbers.formatCurrency(stock.volume * stock.init_price)}">Market Cap</td>
 
                 <td>
                     <form action="#" th:action="@{/marketBuy}" method="post">
@@ -119,7 +119,7 @@
 
             <tr th:each="stock: ${map}">
                 <td th:text="${stock.key}">Ticker</td>
-                <td th:text="${stock.value}">Shares</td>
+                <td th:text="${#numbers.formatDecimal(stock.value, 0, 'COMMA', 2, 'POINT')}">Shares</td>
             </tr>
             </tbody>
         </table>
@@ -147,9 +147,9 @@
 
             <tr th:each="stock: ${userStocks}">
                 <td th:text="${stock.stock.ticker}">Ticker</td>
-                <td th:text="${stock.initPrice}">Market Price</td>
-                <td th:text="${stock.desiredPrice}">Filled Price</td>
-                <td th:text="${stock.amount}">Amount</td>
+                <td th:text="${#numbers.formatCurrency(stock.initPrice)}">Market Price</td>
+                <td th:text="${#numbers.formatCurrency(stock.desiredPrice)}">Filled Price</td>
+                <td th:text="${#numbers.formatDecimal(stock.amount, 0, 'COMMA', 2, 'POINT')}">Amount</td>
                 <td th:text="${stock.buyOrSell}">Buy/Sell</td>
                 <td th:text="${stock.marketOrLimit}">Market/Limit</td>
                 <td th:text="${stock.boughtDate}">Bought Date</td>
