@@ -103,6 +103,9 @@ public class AppController {
 
     @PostMapping("/admin")
     public String submitForm(@ModelAttribute("stock") Stock stock) {
+        Double init_price = stock.getInit_price();
+        stock.setHigh(init_price);
+        stock.setLow(init_price);
         stockRepository.save(stock);
         return "add_success";
     }

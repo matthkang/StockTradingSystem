@@ -54,6 +54,8 @@ public class AppService {
         }
     }
 
+    //public void updateHighLow()
+
     // randomize stock prices executed every x seconds
     @Scheduled(fixedRate = 15000)
     public void randomizePrice() {
