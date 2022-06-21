@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AppController {
@@ -44,9 +43,19 @@ public class AppController {
     public void listMarketUserStocks(Principal principal, Model model){
         User user = returnCurrUser(principal);
 
-        // market
-        List<Stock> listStocks = stockRepository.findAll();
-        model.addAttribute("listStocks", listStocks);
+        String currDay = new SimpleDateFormat("EEE").format(new Date()).toLowerCase();
+
+        Integer openTime = scheduleRepository.getOpenTimeByDay(currDay);
+        Integer closedTime = scheduleRepository.getCloseTimeByDay(currDay);
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        int currHour = calendar.get(Calendar.HOUR);
+
+        if (currHour >= openTime && currHour <= closedTime){
+            // market
+            List<Stock> listStocks = stockRepository.findAll();
+            model.addAttribute("listStocks", listStocks);
+        }
 
         // transaction history
         List<UserStock> userStocks = userStockRepository.findAllByUsername(user);
@@ -104,7 +113,7 @@ public class AppController {
     @PostMapping("/changeSchedule")
     public String changeSchedule(@ModelAttribute("schedule") Schedule schedule) {
         scheduleRepository.save(schedule);
-        return "schedule_success";
+        return "admin";
     }
 
     @PostMapping("/process_register")

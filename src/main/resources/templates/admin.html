@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Welcome to Admin Home (Admin)</title>
@@ -8,48 +8,68 @@
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div align="center">
+<div class="container text-center">
     <h1>Create New Stock</h1>
     <form action="#" th:action="@{/admin}" method="post" th:object="${stock}">
         <label>Company name:</label>
-        <input type="text" name = "co_name" field="*{co_name}" /><br/>
+        <input type="text" name="co_name"/><br/>
 
         <label>Ticker:</label>
-        <input type="text" name = "ticker" field="*{ticker}" /><br/>
+        <input type="text" name="ticker"/><br/>
 
         <label>Volume:</label>
-        <input type="text" name = "volume" field="*{volume}" value=0.0><br/>
+        <input type="text" name="volume" value=0.0><br/>
 
         <label>Initial price:</label>
-        <input type="text" name = "init_price" field="*{init_price}" /><br/>
+        <input type="text" name="init_price"/><br/>
 
         <button type="submit">Create</button>
     </form>
+    </br>
 
-    <h1>Change Market Hours/Schedule</h1>
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Monday Hours:</label></br>
-        <label>Open: </label><input type="number" name="mon_open" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="mon_close" step="1" value=16 min = "1" max = "24">
-        <label>EST</label><br/>
-        <label>Tuesday Hours:</label></br>
-        <label>Open: </label><input type="number" name="tues_open" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="tues_close" value=16 step="1" min = "1" max = "24">
-        <label>EST</label><br/>
-        <label>Wednesday Hours:</label></br>
-        <label>Open: </label><input type="number" name="wed_open" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="wed_close" value=16 step="1" min = "1" max = "24">
-        <label>EST</label><br/>
-        <label>Thursday Hours:</label></br>
-        <label>Open: </label><input type="number" name="thurs_open" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="thurs_close" value=16 step="1" min = "1" max = "24">
-        <label>EST</label><br/>
-        <label>Friday Hours:</label></br>
-        <label>Open: </label><input type="number" name="fri_open" value=9 step="1" min = "1" max = "24">
-        <label>Close: </label><input type="number" name="fri_close" value=16 step="1" min = "1" max = "24">
-        <label>EST</label><br/>
+        <input type="hidden" name ="day" value="mon"/>
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>EST</label>
+        <button type="submit">Set</button>
+    </form>
 
-        <button type="submit">Change</button>
+    <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
+        <label>Tuesday Hours:</label></br>
+        <input type="hidden" name ="day" value="tue"/>
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>EST</label>
+        <button type="submit">Set</button>
+    </form>
+
+    <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
+        <label>Wednesday Hours:</label></br>
+        <input type="hidden" name ="day" value="wed"/>
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>EST</label>
+        <button type="submit">Set</button>
+    </form>
+
+    <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
+        <label>Thursday Hours:</label></br>
+        <input type="hidden" name ="day" value="thu"/>
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>EST</label>
+        <button type="submit">Set</button>
+    </form>
+
+    <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
+        <label>Friday Hours:</label></br>
+        <input type="hidden" name ="day" value="fri"/>
+        <label>Open: </label><input type="number" name="open_time" value=9 step="1" min = "1" max = "24">
+        <label>Close: </label><input type="number" name="close_time" value=16 step="1" min = "1" max = "24">
+        <label>EST</label>
+        <button type="submit">Set</button>
     </form>
 </div>
 
