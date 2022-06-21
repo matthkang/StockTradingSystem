@@ -8,6 +8,7 @@ import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
 import com.example.stocktradingsystem.repository.UserRepository;
 import com.example.stocktradingsystem.repository.UserStockRepository;
+import com.example.stocktradingsystem.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -35,34 +36,13 @@ public class AppController {
     @Autowired
     private UserStockRepository userStockRepository;
 
-    public User returnCurrUser(Principal principal){
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
-        return user;
-    }
-
-    public boolean marketIsOpen(){
-        String currDay = new SimpleDateFormat("EEE").format(new Date()).toLowerCase();
-
-        Integer openTime = scheduleRepository.getOpenTimeByDay(currDay);
-        Integer closedTime = scheduleRepository.getCloseTimeByDay(currDay);
-
-        int currHour = LocalDateTime.now().getHour();
-
-        // if curr hour is at or past opening hour
-        // AND if curr hour is before closing hour
-        if (currHour >= openTime && currHour < closedTime){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    @Autowired
+    AppService appService;
 
     public void listMarketUserStocks(Principal principal, Model model){
-        User user = returnCurrUser(principal);
+        User user = appService.returnCurrUser(principal);
 
-        if (marketIsOpen()){
+        if (appService.marketIsOpen()){
             String marketOpen = "open";
             model.addAttribute("marketStatus", marketOpen);
             // market
@@ -151,7 +131,7 @@ public class AppController {
 
     @PostMapping("/marketBuy")
     public String marketBuyStock(@RequestParam Stock thisStock, @RequestParam String marketBuyAmount, Principal principal, Model model) {
-        User user = returnCurrUser(principal);
+        User user = appService.returnCurrUser(principal);
 
         Double price = thisStock.getInit_price();
         if (!marketBuyAmount.isEmpty()){
@@ -165,7 +145,7 @@ public class AppController {
 
     @PostMapping("/marketSell")
     public String marketSellStock(@RequestParam Stock thisStock, @RequestParam String marketSellAmount, Principal principal, Model model) {
-        User user = returnCurrUser(principal);
+        User user = appService.returnCurrUser(principal);
         Double price = thisStock.getInit_price();
         listMarketUserStocks(principal, model);
 
@@ -200,9 +180,11 @@ public class AppController {
     public String limitBuyStock(@RequestParam Stock thisStock, @RequestParam String limitBuyPrice,
                                 @RequestParam String limitBuyAmount, @RequestParam String limitBuyDate,
                                 Principal principal, Model model) throws ParseException {
-        User user = returnCurrUser(principal);
+        User user = appService.returnCurrUser(principal);
 
-        if (thisStock != null && !limitBuyPrice.isEmpty() && !limitBuyAmount.isEmpty() && !limitBuyDate.isEmpty()) {
+        if (thisStock != null && !limitBuyPrice.isEmpty() &&
+                !limitBuyAmount.isEmpty() && !limitBuyDate.isEmpty() &&
+                appService.marketIsOpen()) {
             Double initPrice = thisStock.getInit_price();
             Double amount = Double.parseDouble(limitBuyAmount);
             Double desiredPrice = Double.parseDouble(limitBuyPrice);
@@ -218,10 +200,12 @@ public class AppController {
     public String limitSellStock(@RequestParam Stock thisStock, @RequestParam String limitSellPrice,
                                 @RequestParam String limitSellAmount, @RequestParam String limitSellDate,
                                 Principal principal, Model model) throws ParseException {
-        User user = returnCurrUser(principal);
+        User user = appService.returnCurrUser(principal);
 
         listMarketUserStocks(principal, model);
-        if (thisStock != null && !limitSellPrice.isEmpty() && !limitSellAmount.isEmpty() && !limitSellDate.isEmpty()) {
+        if (thisStock != null && !limitSellPrice.isEmpty() &&
+                !limitSellAmount.isEmpty() && !limitSellDate.isEmpty() &&
+                appService.marketIsOpen()) {
             Double initPrice = thisStock.getInit_price();
             Double amount = Double.parseDouble(limitSellAmount);
             Double desiredPrice = Double.parseDouble(limitSellPrice);
