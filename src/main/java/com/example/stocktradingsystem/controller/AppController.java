@@ -47,8 +47,7 @@ public class AppController {
         Integer openTime = scheduleRepository.getOpenTimeByDay(currDay);
         Integer closedTime = scheduleRepository.getCloseTimeByDay(currDay);
 
-        //int currHour = LocalDateTime.now().getHour();
-        int currHour = 20;
+        int currHour = LocalDateTime.now().getHour();
 
         // if curr hour is at or past opening hour
         // AND if curr hour is before closing hour
