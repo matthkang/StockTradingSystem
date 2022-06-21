@@ -138,7 +138,7 @@
                 <td th:text="${stock.boughtDate}">Bought Date</td>
                 <td th:text="${stock.expireDate}">Expire Date</td>
                 <form action="#" th:action="@{/cancelOrder}" method="post">
-                    <td th:if="${stock.marketOrLimit} == limit">
+                    <td th:if="${stock.marketOrLimit == limit and stock.fulfilled == false} ">
                         <input type="hidden" name="thisStock" th:value="${stock.id}"/>
                         <input type="submit" value="Cancel"/>
                     </td>

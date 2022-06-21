@@ -145,6 +145,8 @@ public class AppController {
 
         if (!marketSellAmount.isEmpty()){
             Double amount = Double.parseDouble(marketSellAmount);
+
+            // ensure that user has more stocks than they want to sell
             Double numBuys = userStockRepository.findNumBuys(thisStock.getTicker());
             Double numSells = userStockRepository.findNumSells(thisStock.getTicker());
             if (numBuys == null){
@@ -199,6 +201,7 @@ public class AppController {
             Double desiredPrice = Double.parseDouble(limitSellPrice);
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitSellDate);
 
+            // ensure that user has more stocks than they want to sell
             Double numBuys = userStockRepository.findNumBuys(thisStock.getTicker());
             Double numSells = userStockRepository.findNumSells(thisStock.getTicker());
             if (numBuys == null){
