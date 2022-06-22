@@ -54,8 +54,6 @@ public class AppService {
         }
     }
 
-    //public void updateHighLow()
-
     // randomize stock prices executed every x seconds
     @Scheduled(fixedRate = 15000)
     public void randomizePrice() {
@@ -67,6 +65,14 @@ public class AppService {
             Double newPrice = stock.getInit_price() * (1 + percentage);
             DecimalFormat df = new DecimalFormat("#.##");
             newPrice = Double.valueOf(df.format(newPrice));
+
+            // update low or high
+            if (newPrice < stock.getLow()){
+                stock.setLow(newPrice);
+            }
+            else if (newPrice > stock.getHigh()){
+                stock.setHigh(newPrice);
+            }
 
             // update stock with new price
             stock.setInit_price(newPrice);
