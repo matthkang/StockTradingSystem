@@ -77,7 +77,7 @@
 
                 <td>
                     <form action="#" th:action="@{/marketBuy}" method="post">
-                        <label>Amount: </label>
+                        <label>Quantity: </label>
                         <input type="number" name="marketBuyAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
                         <input type="submit" value="Buy"/>
@@ -85,7 +85,7 @@
                 </td>
                 <td>
                     <form action="#" th:action="@{/marketSell}" method="post">
-                        <label>Amount: </label>
+                        <label>Quantity: </label>
                         <input type="number" name="marketSellAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/>
                         <input type="submit" value="Sell"/>
@@ -95,7 +95,7 @@
                     <form action="#" th:action="@{/limitBuy}" method="post">
                         <label>Desired Price: </label>
                         <input type="number" name="limitBuyPrice" style="width: 75px">
-                        <label>Amount: </label>
+                        <label>Quantity: </label>
                         <input type="number" name="limitBuyAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
                         <label>Exp Date: </label>
@@ -107,7 +107,7 @@
                     <form action="#" th:action="@{/limitSell}" method="post">
                         <label>Desired Price: </label>
                         <input type="number" name="limitSellPrice" style="width: 75px">
-                        <label>Amount: </label>
+                        <label>Quantity: </label>
                         <input type="number" name="limitSellAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
                         <label>Exp Date: </label>

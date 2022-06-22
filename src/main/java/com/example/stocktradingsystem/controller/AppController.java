@@ -310,6 +310,9 @@ public class AppController {
         Double currAmount = user.getWallet();
         if (!withdrawAmount.isEmpty()){
             Double deposit = Double.parseDouble(withdrawAmount);
+            if (deposit > currAmount){
+                return "withdraw_error";
+            }
             currAmount -= deposit;
             DecimalFormat df = new DecimalFormat("#.##");
             currAmount = Double.valueOf(df.format(currAmount));
