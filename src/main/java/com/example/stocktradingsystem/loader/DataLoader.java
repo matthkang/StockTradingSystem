@@ -11,6 +11,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
+
 @Component
 public class DataLoader implements ApplicationRunner {
 
@@ -32,19 +34,19 @@ public class DataLoader implements ApplicationRunner {
         }
 
         if (!scheduleRepository.existsById("mon")){
-            scheduleRepository.save(new Schedule("mon", 9, 16));
+            scheduleRepository.save(new Schedule("mon", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
         if (!scheduleRepository.existsById("tue")){
-            scheduleRepository.save(new Schedule("tue", 9, 16));
+            scheduleRepository.save(new Schedule("tue", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
         if (!scheduleRepository.existsById("wed")) {
-            scheduleRepository.save(new Schedule("wed", 9, 16));
+            scheduleRepository.save(new Schedule("wed", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
         if (!scheduleRepository.existsById("thu")){
-            scheduleRepository.save(new Schedule("thu", 9, 16));
+            scheduleRepository.save(new Schedule("thu", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
         if (!scheduleRepository.existsById("fri")){
-            scheduleRepository.save(new Schedule("fri", 9, 16));
+            scheduleRepository.save(new Schedule("fri", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
 
         if (!stockRepository.existsById("GOOG")){

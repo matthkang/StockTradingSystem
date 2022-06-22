@@ -1,6 +1,9 @@
 package com.example.stocktradingsystem.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalTime;
 
 @Entity // persistent java class
 @Table(name = "schedule")
@@ -8,14 +11,14 @@ public class Schedule {
     @Id // primary key
     private String day;
 
-    private Integer open_time;
+    private LocalTime open_time;
 
-    private Integer close_time;
+    private LocalTime close_time;
 
     public Schedule() {
     }
 
-    public Schedule(String day, Integer open_time, Integer close_time) {
+    public Schedule(String day, LocalTime open_time, LocalTime close_time) {
         this.day = day;
         this.open_time = open_time;
         this.close_time = close_time;
@@ -29,19 +32,19 @@ public class Schedule {
         this.day = day;
     }
 
-    public Integer getOpen_time() {
+    public LocalTime getOpen_time() {
         return open_time;
     }
 
-    public void setOpen_time(Integer open_time) {
+    public void setOpen_time(LocalTime open_time) {
         this.open_time = open_time;
     }
 
-    public Integer getClose_time() {
+    public LocalTime getClose_time() {
         return close_time;
     }
 
-    public void setClose_time(Integer close_time) {
+    public void setClose_time(LocalTime close_time) {
         this.close_time = close_time;
     }
 

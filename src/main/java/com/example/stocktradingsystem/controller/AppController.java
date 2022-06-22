@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +114,17 @@ public class AppController {
     }
 
     @PostMapping("/changeSchedule")
-    public String changeSchedule(@ModelAttribute("schedule") Schedule schedule) {
+    public String changeSchedule(@RequestParam("day") String day,
+                                 @RequestParam("open_time") String openTime,
+                                 @RequestParam("close_time") String closeTime) throws ParseException {
+        Schedule schedule = new Schedule();
+        schedule.setDay(day);
+
+        LocalTime open = LocalTime.parse(openTime);
+        LocalTime close = LocalTime.parse(closeTime);
+
+        schedule.setOpen_time(open);
+        schedule.setClose_time(close);
         scheduleRepository.save(schedule);
         return "admin";
     }

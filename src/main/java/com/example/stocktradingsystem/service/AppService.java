@@ -9,14 +9,13 @@ import com.example.stocktradingsystem.repository.UserRepository;
 import com.example.stocktradingsystem.repository.UserStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -41,17 +40,16 @@ public class AppService {
         return null;
     }
 
-    public boolean marketIsOpen(){
+    public boolean marketIsOpen() {
         String currDay = new SimpleDateFormat("EEE").format(new Date()).toLowerCase();
 
-        Integer openTime = scheduleRepository.getOpenTimeByDay(currDay);
-        Integer closedTime = scheduleRepository.getCloseTimeByDay(currDay);
-
-        int currHour = LocalDateTime.now().getHour();
+        LocalTime openTime = scheduleRepository.getOpenTimeByDay(currDay);
+        LocalTime closedTime = scheduleRepository.getCloseTimeByDay(currDay);
+        LocalTime currTime = LocalTime.now();
 
         // if curr hour is at or past opening hour
         // AND if curr hour is before closing hour
-        if (currHour >= openTime && currHour < closedTime){
+        if (currTime.isAfter(openTime) && currTime.isBefore(closedTime)){
             return true;
         }
         else {
@@ -62,7 +60,7 @@ public class AppService {
     // randomize stock prices executed every x seconds
     // only randomize when market is open
     @Scheduled(fixedRate = 30000)
-    public void randomizePrice() {
+    public void randomizePrice() throws ParseException {
         List<Stock> stocks = stockRepository.findAll();
         if (marketIsOpen()) {
             for (Stock stock : stocks) {
