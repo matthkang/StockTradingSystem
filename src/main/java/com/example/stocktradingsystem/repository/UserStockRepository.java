@@ -24,4 +24,7 @@ public interface UserStockRepository extends JpaRepository<UserStock, Long> {
 
     @Query("SELECT sum(u.amount) FROM UserStock u WHERE u.stock.ticker = ?1 AND u.fulfilled = 'true' AND u.buyOrSell = 'sell'")
     public Double findNumSells(String ticker);
+
+    @Query("SELECT sum(u.amount * u.desiredPrice) FROM UserStock u WHERE u.fulfilled = 'true' AND u.stock.ticker = ?1")
+    public Double findEquity(String ticker);
 }

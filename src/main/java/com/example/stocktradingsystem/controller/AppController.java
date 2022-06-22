@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +64,8 @@ public class AppController {
 
         // portfolio
         List<String> distinctStocks = userStockRepository.findDistinctStockTickers();
-        // ticker, shares
-        HashMap<String, Double> map = new HashMap<>();
+        // String = ticker, List<Double> = shares, equity
+        HashMap<String, List<Double>> map = new HashMap<>();
         for (String ticker: distinctStocks){
             Double numBuys = userStockRepository.findNumBuys(ticker);
             Double numSells = userStockRepository.findNumSells(ticker);
@@ -75,9 +76,15 @@ public class AppController {
                 numSells = 0.0;
             }
             Double total = numBuys - numSells;
-            // only add to map if shares is greater than 0
+            // only add if shares is greater than 0
             if (total > 0){
-                map.put(ticker, total);
+                List<Double> list = new ArrayList<>();
+                list.add(total);
+                // add equity for stock to list
+                Double equity = userStockRepository.findEquity(ticker);
+                list.add(equity);
+
+                map.put(ticker, list);
             }
         }
         model.addAttribute("map", map);

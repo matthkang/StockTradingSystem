@@ -129,13 +129,15 @@
             <tr>
                 <th>Ticker</th>
                 <th>Shares</th>
+                <th>Equity</th>
             </tr>
             </thead>
             <tbody>
 
             <tr th:each="stock: ${map}">
                 <td th:text="${stock.key}">Ticker</td>
-                <td th:text="${#numbers.formatDecimal(stock.value, 0, 'COMMA', 2, 'POINT')}">Shares</td>
+                <td th:text="${#numbers.formatDecimal(stock.value.get(0), 0, 'COMMA', 2, 'POINT')}">Shares</td>
+                <td th:text="${#numbers.formatDecimal(stock.value.get(1), 0, 'COMMA', 2, 'POINT')}">Equity</td>
             </tr>
             </tbody>
         </table>
@@ -167,6 +169,9 @@
                 <td th:text="${#numbers.formatCurrency(stock.initPrice)}">Market Price</td>
                 <td th:text="${#numbers.formatCurrency(stock.desiredPrice)}">Limit Price</td>
                 <td th:if="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'} ">
+                    <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}"></span>
+                </td>
+                <td th:if="${stock.marketOrLimit == 'market'}">
                     <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}"></span>
                 </td>
                 <td th:unless="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'} ">
