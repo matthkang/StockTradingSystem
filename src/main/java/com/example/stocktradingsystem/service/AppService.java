@@ -9,6 +9,8 @@ import com.example.stocktradingsystem.repository.UserRepository;
 import com.example.stocktradingsystem.repository.UserStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -31,9 +33,12 @@ public class AppService {
     private ScheduleRepository scheduleRepository;
 
     public User returnCurrUser(Principal principal){
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email);
-        return user;
+        if (principal != null){
+            String email = principal.getName();
+            User user = userRepository.findByEmail(email);
+            return user;
+        }
+        return null;
     }
 
     public boolean marketIsOpen(){
@@ -55,68 +60,105 @@ public class AppService {
     }
 
     // randomize stock prices executed every x seconds
-    @Scheduled(fixedRate = 15000)
+    // only randomize when market is open
+    @Scheduled(fixedRate = 30000)
     public void randomizePrice() {
         List<Stock> stocks = stockRepository.findAll();
-        for (Stock stock : stocks) {
-            Random r = new Random();
-            // rand number from -0.05 to 0.05
-            double percentage = -0.05 + (0.05 - (-0.05)) * r.nextDouble();
-            Double newPrice = stock.getInit_price() * (1 + percentage);
-            DecimalFormat df = new DecimalFormat("#.##");
-            newPrice = Double.valueOf(df.format(newPrice));
+        if (marketIsOpen()) {
+            for (Stock stock : stocks) {
+                Random r = new Random();
+                // rand number from -0.05 to 0.05
+                Double percentage = -0.05 + (0.05 - (-0.05)) * r.nextDouble();
+                Double newPrice = stock.getInit_price() * (1 + percentage);
+                newPrice = formatDecimal(newPrice);
 
-            // update low or high
-            if (newPrice < stock.getLow()){
-                stock.setLow(newPrice);
-            }
-            else if (newPrice > stock.getHigh()){
-                stock.setHigh(newPrice);
-            }
-
-            // update stock with new price
-            stock.setInit_price(newPrice);
-            stockRepository.save(stock);
-
-            // debugging purposes
-            System.out.println("stock: " + stock.getTicker());
-            System.out.println("new price: " + newPrice);
-            System.out.println();
-
-            // update user_stocks with new price
-            List<UserStock> userStocks = userStockRepository.findAll();
-            for (UserStock userStock: userStocks){
-                if (userStock.getStock().getTicker().equals(stock.getTicker())){
-                    userStock.setInitPrice(newPrice);
-                    userStockRepository.save(userStock);
+                // update low or high
+                if (newPrice < stock.getLow()) {
+                    stock.setLow(newPrice);
+                } else if (newPrice > stock.getHigh()) {
+                    stock.setHigh(newPrice);
                 }
-            }
 
-            List<UserStock> limitStocks = userStockRepository.findAllByMarketLimit();
-            for (UserStock limitStock: limitStocks){
-                // FOR A LIMIT BUY:
-                // if new price is less than or equal to desired price
-                // and if curr date is before or equal to expired date
-                // and buy has not been fulfilled yet
-                if (newPrice <= limitStock.getDesiredPrice() &&
-                        new Date().compareTo(limitStock.getExpireDate()) <= 0 &&
-                        limitStock.isFulfilled().equals("false") &&
-                        limitStock.getBuyOrSell().equals("buy")){
-                    limitStock.setFulfilled("true");
-                    userStockRepository.save(limitStock);
+                // update stock with new price
+                stock.setInit_price(newPrice);
+                stockRepository.save(stock);
+
+                // debugging purposes
+                System.out.println("stock: " + stock.getTicker());
+                System.out.println("new price: " + newPrice);
+                System.out.println();
+
+                // update user_stocks with new price
+                List<UserStock> userStocks = userStockRepository.findAll();
+                for (UserStock userStock : userStocks) {
+                    if (userStock.getStock().getTicker().equals(stock.getTicker())) {
+                        userStock.setInitPrice(newPrice);
+                        userStockRepository.save(userStock);
+                    }
                 }
-                // FOR A LIMIT SELL:
-                // if new price is greater than or equal to desired price
-                // and if curr date is before or equal to expired date
-                // and sell has not been fulfilled yet
-                if (newPrice >= limitStock.getDesiredPrice() &&
-                        new Date().compareTo(limitStock.getExpireDate()) <= 0 &&
-                        limitStock.isFulfilled().equals("false") &&
-                        limitStock.getBuyOrSell().equals("sell")){
-                    limitStock.setFulfilled("true");
-                    userStockRepository.save(limitStock);
+
+                List<UserStock> limitStocks = userStockRepository.findAllByMarketLimit();
+                for (UserStock limitStock : limitStocks) {
+                    User user = limitStock.getUser();
+                    // FOR A LIMIT BUY:
+                    // if new price is equal to desired price with buffer of 2.5% of market price
+                    // and if curr date is before or equal to expired date
+                    // and buy has not been fulfilled yet
+                    if ((Math.abs(newPrice - limitStock.getDesiredPrice()) <= 0.025 * newPrice) &&
+                            new Date().compareTo(limitStock.getExpireDate()) <= 0 &&
+                            limitStock.getFulfilled().equals("false") &&
+                            limitStock.getBuyOrSell().equals("buy")) {
+                        limitStock.setFulfilled("true");
+                        userStockRepository.save(limitStock);
+
+                        // remove bought amount from funds
+                        Double totalPrice = limitStock.getDesiredPrice() * limitStock.getAmount();
+                        // check whether user has enough funds in wallet to buy
+                        if (enoughBalance(user, totalPrice)){
+                            Double currWallet = user.getWallet();
+                            currWallet -= totalPrice;
+                            user.setWallet(currWallet);
+                            userRepository.save(user);
+                        }
+                    }
+                    // FOR A LIMIT SELL:
+                    // if new price is equal to desired price with buffer of 2.5% of market price
+                    // and if curr date is before or equal to expired date
+                    // and sell has not been fulfilled yet
+                    if ((Math.abs(newPrice - limitStock.getDesiredPrice()) <= 0.025 * newPrice) &&
+                            new Date().compareTo(limitStock.getExpireDate()) <= 0 &&
+                            limitStock.getFulfilled().equals("false") &&
+                            limitStock.getBuyOrSell().equals("sell")) {
+                        limitStock.setFulfilled("true");
+                        userStockRepository.save(limitStock);
+
+                        // add sold amount to funds
+                        Double totalPrice = limitStock.getDesiredPrice() * limitStock.getAmount();
+                        // check whether user has enough funds in wallet to buy
+                        if (enoughBalance(user, totalPrice)){
+                            Double currWallet = user.getWallet();
+                            currWallet += totalPrice;
+                            user.setWallet(currWallet);
+                            userRepository.save(user);
+                        }
+                    }
                 }
             }
         }
+    }
+
+
+    public Double formatDecimal(Double d){
+        DecimalFormat df = new DecimalFormat("#.##");
+        d = Double.valueOf(df.format(d));
+        return d;
+    }
+
+    public boolean enoughBalance(User user, Double price){
+        Double currWallet = user.getWallet();
+        if (currWallet >= price){
+            return true;
+        }
+        else return false;
     }
 }

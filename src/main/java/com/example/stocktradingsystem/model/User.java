@@ -29,6 +29,8 @@ public class User {
 
     private String role;
 
+    private Double wallet;
+
     @OneToMany(mappedBy = "user")
     private List<Stock> stocks = new ArrayList<>();
 
@@ -36,13 +38,14 @@ public class User {
         this.role = "ROLE_USER";
     }
 
-    public User(String username, String firstName, String lastName, String password, String email, String role) {
+    public User(String username, String firstName, String lastName, String password, String email, String role, Double wallet) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.wallet = wallet;
     }
 
     public String getFirstName() {
@@ -108,6 +111,14 @@ public class User {
         this.stocks = stocks;
     }
 
+    public Double getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Double wallet) {
+        this.wallet = wallet;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -117,6 +128,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
+                ", wallet=" + wallet +
                 ", stocks=" + stocks +
                 '}';
     }

@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-    <meta http-equiv="refresh" content="20">
+    <meta http-equiv="refresh" content="30">
 </head>
 <body>
 <div class="container text-center">
@@ -33,6 +33,22 @@
         </script>
 
     </div>
+    <div>
+        <h1>Buying Power</h1>
+        <p th:text="${#numbers.formatCurrency(currUser.wallet)}"/>
+        <form action="#" th:action="@{/depositFunds}" method="post">
+            <label>Amount($): </label>
+            <input type="number" name="depositAmount" style="width: 75px" step="any" min="0">
+            <input type="submit" value="Deposit"/>
+        </form>
+        <form action="#" th:action="@{/withdrawFunds}" method="post">
+            <label>Amount($): </label>
+            <input type="number" name="withdrawAmount" style="width: 75px" step="any" min="0">
+            <input type="submit" value="Withdraw"/>
+        </form>
+
+    </div>
+
     <div>
         <h1>Market</h1>
     </div>
@@ -140,7 +156,7 @@
                 <th>Market/Limit</th>
                 <th>Bought Date</th>
                 <th>Expire Date</th>
-                <th>Action</th>
+                <th>Status</th>
             </tr>
             </thead>
             <tbody>
@@ -155,7 +171,7 @@
                 <td th:text="${stock.boughtDate}">Bought Date</td>
                 <td th:text="${stock.expireDate}">Expire Date</td>
                 <form action="#" th:action="@{/cancelOrder}" method="post">
-                    <td th:if="${stock.marketOrLimit == limit and stock.fulfilled == false} ">
+                    <td th:if="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'false'} ">
                         <input type="hidden" name="thisStock" th:value="${stock.id}"/>
                         <input type="submit" value="Cancel"/>
                     </td>

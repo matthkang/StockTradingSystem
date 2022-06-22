@@ -1,6 +1,7 @@
 package com.example.stocktradingsystem.loader;
 
 import com.example.stocktradingsystem.model.Schedule;
+import com.example.stocktradingsystem.model.Stock;
 import com.example.stocktradingsystem.model.User;
 import com.example.stocktradingsystem.repository.ScheduleRepository;
 import com.example.stocktradingsystem.repository.StockRepository;
@@ -17,17 +18,37 @@ public class DataLoader implements ApplicationRunner {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StockRepository stockRepository;
 
     public void run(ApplicationArguments args) {
-        User user = new User("user", "user", "user", "$2a$10$t4yEICuRGn3f6UhBoMfTVOaA1dgyje.1WPqeuaAd0dCdWy6r56OrS","user@email.com" ,"ROLE_USER");
-        User admin = new User("admin", "admin", "admin", "$2a$10$t4yEICuRGn3f6UhBoMfTVOaA1dgyje.1WPqeuaAd0dCdWy6r56OrS","admin@email.com" ,"ROLE_ADMIN");
-        userRepository.save(user);
-        userRepository.save(admin);
+        User user = new User("user", "user", "user", "$2a$10$t4yEICuRGn3f6UhBoMfTVOaA1dgyje.1WPqeuaAd0dCdWy6r56OrS","user@email.com" ,"ROLE_USER", 0.00);
+        User admin = new User("admin", "admin", "admin", "$2a$10$t4yEICuRGn3f6UhBoMfTVOaA1dgyje.1WPqeuaAd0dCdWy6r56OrS","admin@email.com" ,"ROLE_ADMIN", 0.00);
+        if (!userRepository.existsById("user")){
+            userRepository.save(user);
+        }
+        if (!userRepository.existsById("admin")){
+            userRepository.save(admin);
+        }
 
-        scheduleRepository.save(new Schedule("mon", 9, 16));
-        scheduleRepository.save(new Schedule("tue", 9, 16));
-        scheduleRepository.save(new Schedule("wed", 9, 16));
-        scheduleRepository.save(new Schedule("thu", 9, 16));
-        scheduleRepository.save(new Schedule("fri", 9, 16));
+        if (!scheduleRepository.existsById("mon")){
+            scheduleRepository.save(new Schedule("mon", 9, 16));
+        }
+        if (!scheduleRepository.existsById("tue")){
+            scheduleRepository.save(new Schedule("tue", 9, 16));
+        }
+        if (!scheduleRepository.existsById("wed")) {
+            scheduleRepository.save(new Schedule("wed", 9, 16));
+        }
+        if (!scheduleRepository.existsById("thu")){
+            scheduleRepository.save(new Schedule("thu", 9, 16));
+        }
+        if (!scheduleRepository.existsById("fri")){
+            scheduleRepository.save(new Schedule("fri", 9, 16));
+        }
+
+        if (!stockRepository.existsById("GOOG")){
+            stockRepository.save(new Stock("GOOG", "Google", 0.0, 2233.45, 0.0, 0.0));
+        }
     }
 }

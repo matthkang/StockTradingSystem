@@ -129,7 +129,7 @@ public class UserStock {
         this.buyOrSell = buyOrSell;
     }
 
-    public String isFulfilled() {
+    public String getFulfilled() {
         return fulfilled;
     }
 
@@ -150,7 +150,7 @@ public class UserStock {
                 ", boughtDate=" + boughtDate +
                 ", expireDate=" + expireDate +
                 ", amount=" + amount +
-                ", fulfilled=" + fulfilled +
+                ", fulfilled='" + fulfilled + '\'' +
                 '}';
     }
 }

@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class AppController {
@@ -41,6 +42,7 @@ public class AppController {
 
     public void listMarketUserStocks(Principal principal, Model model){
         User user = appService.returnCurrUser(principal);
+        model.addAttribute("currUser", user);
 
         if (appService.marketIsOpen()){
             String marketOpen = "open";
@@ -122,6 +124,8 @@ public class AppController {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
+        user.setWallet(0.00);
+
         userRepository.save(user);
         return "register_success";
     }
@@ -139,7 +143,19 @@ public class AppController {
         Double price = thisStock.getInit_price();
         if (!marketBuyAmount.isEmpty()){
             Double amount = Double.parseDouble(marketBuyAmount);
-            userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount, "true"));
+            Double totalPrice = price * amount;
+            // check whether user has enough funds in wallet to buy
+            if (appService.enoughBalance(user, totalPrice)){
+                userStockRepository.save(new UserStock(user, thisStock, price, price, "buy", "market", new Date(), null, amount, "true"));
+                // remove bought amount from funds
+                Double currWallet = user.getWallet();
+                currWallet -= totalPrice;
+                user.setWallet(currWallet);
+                userRepository.save(user);
+            }
+            else {
+                return "insufficient_funds";
+            }
         }
 
         listMarketUserStocks(principal, model);
@@ -173,10 +189,18 @@ public class AppController {
                 thisStock.setVolume(volume);
                 stockRepository.save(thisStock);
 
-                return "redirect:customer";
+                // add sold amount to funds
+                Double totalPrice = price * amount;
+                Double currWallet = user.getWallet();
+                currWallet += totalPrice;
+                user.setWallet(currWallet);
+                userRepository.save(user);
+            }
+            else {
+                return "error_selling";
             }
         }
-        return "error_selling";
+        return "redirect:customer";
     }
 
     @PostMapping("/limitBuy")
@@ -191,8 +215,15 @@ public class AppController {
             Double initPrice = thisStock.getInit_price();
             Double amount = Double.parseDouble(limitBuyAmount);
             Double desiredPrice = Double.parseDouble(limitBuyPrice);
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitBuyDate);
-            userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "buy", "limit", new Date(), date, amount, "false"));
+            Double totalPrice = amount * desiredPrice;
+            // check whether user has enough funds in wallet to buy
+            if (appService.enoughBalance(user, totalPrice)){
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(limitBuyDate);
+                userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "buy", "limit", new Date(), date, amount, "false"));
+            }
+            else {
+                return "insufficient_funds";
+            }
         }
 
         listMarketUserStocks(principal, model);
@@ -227,16 +258,54 @@ public class AppController {
 
             if (amount <= currShares){
                 userStockRepository.save(new UserStock(user, thisStock, initPrice, desiredPrice, "sell", "limit", new Date(), date, amount, "false"));
-                return "redirect:customer";
+            }
+            else {
+                return "error_selling";
             }
         }
-        return "error_selling";
+        return "redirect:customer";
     }
 
     @PostMapping("/cancelOrder")
     public String cancelLimitOrder(@RequestParam UserStock thisStock, Principal principal, Model model){
         Long id = thisStock.getId();
         userStockRepository.deleteById(id);
+
+        listMarketUserStocks(principal, model);
+        return "redirect:customer";
+    }
+
+    @PostMapping("/depositFunds")
+    public String depositFunds(@RequestParam String depositAmount, Principal principal, Model model){
+        User user = appService.returnCurrUser(principal);
+        Double currAmount = user.getWallet();
+        if (!depositAmount.isEmpty()){
+            Double deposit = Double.parseDouble(depositAmount);
+            currAmount += deposit;
+            DecimalFormat df = new DecimalFormat("#.##");
+            currAmount = Double.valueOf(df.format(currAmount));
+            currAmount = appService.formatDecimal(currAmount);
+            user.setWallet(currAmount);
+            userRepository.save(user);
+        }
+
+        listMarketUserStocks(principal, model);
+        return "redirect:customer";
+    }
+
+    @PostMapping("/withdrawFunds")
+    public String withdrawFunds(@RequestParam String withdrawAmount, Principal principal, Model model){
+        User user = appService.returnCurrUser(principal);
+        Double currAmount = user.getWallet();
+        if (!withdrawAmount.isEmpty()){
+            Double deposit = Double.parseDouble(withdrawAmount);
+            currAmount -= deposit;
+            DecimalFormat df = new DecimalFormat("#.##");
+            currAmount = Double.valueOf(df.format(currAmount));
+            currAmount = appService.formatDecimal(currAmount);
+            user.setWallet(currAmount);
+            userRepository.save(user);
+        }
 
         listMarketUserStocks(principal, model);
         return "redirect:customer";

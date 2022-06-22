@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+public interface ScheduleRepository extends JpaRepository<Schedule, String> {
     @Query("SELECT u.open_time FROM Schedule u WHERE u.day = ?1")
     public int getOpenTimeByDay(String day);
 
