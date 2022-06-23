@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to Admin Home (Admin)</title>
+    <title>Admin Home Page</title>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
@@ -27,6 +27,7 @@
     </form>
     </br>
 
+    <h1>Change Market Hours</h1>
     <form action="#" th:action="@{/changeSchedule}" method="post" th:object="${schedule}">
         <label>Monday Hours:</label></br>
         <input type="hidden" name ="day" value="mon"/>

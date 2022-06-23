@@ -107,8 +107,15 @@ public class AppController {
     }
 
     @GetMapping("/admin")
-    public String getAdminPage() {
-        return "admin";
+    public String getAdminPage(Principal principal) {
+        User user = appService.returnCurrUser(principal);
+        if (user == null){
+            return "login_error";
+        }
+        else if (user.getRole().equals("ROLE_ADMIN")){
+            return "admin";
+        }
+        return "login_error";
     }
 
     @PostMapping("/admin")
