@@ -63,7 +63,7 @@ public class AppController {
         model.addAttribute("userStocks", userStocks);
 
         // portfolio
-        List<String> distinctStocks = userStockRepository.findDistinctStockTickers();
+        List<String> distinctStocks = userStockRepository.findDistinctStockTickers(user);
         // String = ticker, List<Double> = shares, equity
         HashMap<String, List<Double>> map = new HashMap<>();
         for (String ticker: distinctStocks){
@@ -151,6 +151,11 @@ public class AppController {
 
         user.setWallet(0.00);
 
+        // username/email already exists
+        if (userRepository.existsById(user.getUsername()) ||
+                userRepository.existsByEmail(user.getEmail())){
+            return "register_error";
+        }
         userRepository.save(user);
         return "register_success";
     }

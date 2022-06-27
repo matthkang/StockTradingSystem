@@ -16,8 +16,8 @@ public interface UserStockRepository extends JpaRepository<UserStock, Long> {
     @Query("SELECT u FROM UserStock u WHERE u.marketOrLimit = 'limit'")
     public List<UserStock> findAllByMarketLimit();
 
-    @Query("SELECT DISTINCT(u.stock.ticker) FROM UserStock u")
-    public List<String> findDistinctStockTickers();
+    @Query("SELECT DISTINCT(u.stock.ticker) FROM UserStock u WHERE u.user = ?1")
+    public List<String> findDistinctStockTickers(User user);
 
     @Query("SELECT sum(u.amount) FROM UserStock u WHERE u.stock.ticker = ?1 AND u.fulfilled = 'true' AND u.buyOrSell = 'buy'")
     public Double findNumBuys(String ticker);

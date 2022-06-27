@@ -49,7 +49,7 @@ public class AppService {
 
         // if curr hour is at or past opening hour
         // AND if curr hour is before closing hour
-        if (currTime.isAfter(openTime) && currTime.isBefore(closedTime)){
+        if (openTime != null && closedTime != null && currTime.isAfter(openTime) && currTime.isBefore(closedTime)){
             return true;
         }
         else {

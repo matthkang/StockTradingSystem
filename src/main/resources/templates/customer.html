@@ -72,7 +72,7 @@
             <tr th:each="stock: ${listStocks}">
                 <td th:text="${stock.ticker}">Stock Ticker</td>
                 <td th:text="${#numbers.formatCurrency(stock.init_price)}">Initial Price</td>
-                <td th:text="${#numbers.formatDecimal(stock.volume, 0, 'COMMA', 2, 'POINT')}">Volume</td>
+                <td th:text="${#numbers.formatDecimal(stock.volume, 1, 'COMMA', 2, 'POINT')}">Volume</td>
                 <td th:text="${#numbers.formatCurrency(stock.volume * stock.init_price)}">Market Cap</td>
 
                 <td>
@@ -94,7 +94,7 @@
                 <td>
                     <form action="#" th:action="@{/limitBuy}" method="post">
                         <label>Price: </label>
-                        <input type="number" name="limitBuyPrice" style="width: 75px"></br>
+                        <input type="number" name="limitBuyPrice" style="width: 75px" step="any" min="0"></br>
                         <label>Quantity: </label>
                         <input type="number" name="limitBuyAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
@@ -106,7 +106,7 @@
                 <td>
                     <form action="#" th:action="@{/limitSell}" method="post">
                         <label>Price: </label>
-                        <input type="number" name="limitSellPrice" style="width: 75px"></br>
+                        <input type="number" name="limitSellPrice" style="width: 75px" step="any" min="0"></br>
                         <label>Quantity: </label>
                         <input type="number" name="limitSellAmount" style="width: 75px" step="any" min="0">
                         <input type="hidden" name="thisStock" th:value="${stock.ticker}"/></br>
@@ -167,15 +167,17 @@
             <tr th:each="stock: ${userStocks}">
                 <td th:text="${stock.stock.ticker}">Ticker</td>
                 <td th:text="${#numbers.formatCurrency(stock.initPrice)}">Market Price</td>
-                <td th:text="${#numbers.formatCurrency(stock.desiredPrice)}">Limit Price</td>
-                <td th:if="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'} ">
-                    <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}"></span>
+                <td th:if="${stock.marketOrLimit == 'limit'}">
+                    <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}">Limit Price</span>
+                </td>
+                <td th:unless="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'} ">
+                    <span></span>
                 </td>
                 <td th:if="${stock.marketOrLimit == 'market'}">
                     <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}"></span>
                 </td>
-                <td th:unless="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'} ">
-                    <span></span>
+                <td th:if="${stock.marketOrLimit == 'limit'} and ${stock.fulfilled == 'true'}">
+                    <span th:text="${#numbers.formatCurrency(stock.desiredPrice)}"></span>
                 </td>
                 <td th:text="${#numbers.formatDecimal(stock.amount, 0, 'COMMA', 2, 'POINT')}">Amount</td>
                 <td th:text="${stock.buyOrSell}">Buy/Sell</td>

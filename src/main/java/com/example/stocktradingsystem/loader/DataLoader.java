@@ -49,6 +49,13 @@ public class DataLoader implements ApplicationRunner {
             scheduleRepository.save(new Schedule("fri", LocalTime.parse("09:30"), LocalTime.parse("16:00")));
         }
 
+        if (!scheduleRepository.existsById("sat")){
+            scheduleRepository.save(new Schedule("sat", LocalTime.parse("09:30"), LocalTime.parse("23:59")));
+        }
+        if (!scheduleRepository.existsById("sun")){
+            scheduleRepository.save(new Schedule("sun", LocalTime.parse("09:30"), LocalTime.parse("23:59")));
+        }
+
         if (!stockRepository.existsById("GOOG")){
             stockRepository.save(new Stock("GOOG", "Google", 0.0, 2233.45, 0.0, 0.0));
         }
