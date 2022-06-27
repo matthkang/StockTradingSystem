@@ -118,7 +118,7 @@ public class AppController {
         return "login_error";
     }
 
-    @PostMapping("/admin")
+    @PostMapping("/addStock")
     public String submitForm(@ModelAttribute("stock") Stock stock) {
         Double init_price = stock.getInit_price();
         stock.setHigh(init_price);
@@ -143,7 +143,7 @@ public class AppController {
         return "admin";
     }
 
-    @PostMapping("/process_register")
+    @PostMapping("/registerUser")
     public String processRegister(User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
