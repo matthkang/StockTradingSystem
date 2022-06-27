@@ -25,3 +25,5 @@ Only thing that needs to be setup beforehand is to create the database.
 CREATE DATABASE stocktrading;
 ```
 Tables and mock data (users, stocks, schedule) will be preloaded when the application starts.
+
+Ensure that no data are in the tables to make sure that data can preload correctly. 
