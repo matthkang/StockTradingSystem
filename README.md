@@ -4,6 +4,7 @@
 * [Description](#description)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [Installation](#installation)
 
 ## Description
 - A stock trading platform where users can buy and sell stocks.
@@ -27,3 +28,12 @@ CREATE DATABASE stocktrading;
 Tables and mock data (users, stocks, schedule) will be preloaded when the application starts.
 
 Ensure that no data are in the tables to make sure that data can preload correctly. 
+
+## Installation
+Navigate to the root StockTradingSystem directory and run the following maven wrapper command:
+```
+./mvnw spring-boot:run
+```
+Application starts at the endpoint:
+
+_localhost:8080_
